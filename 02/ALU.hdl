@@ -41,6 +41,59 @@ CHIP ALU {
         zr, // 1 if (out == 0), 0 otherwise
         ng; // 1 if (out < 0),  0 otherwise
 
-    PARTS:
-   // Put you code here:
+    PARTS: 
+    // Always remember to use the OUT pin
+
+    // ZX Selection Pin
+        // 2's Complement X 
+        Not16(in=x, out=ZXNot);
+        Inc16(in=ZXNot, out=x2Comp); 
+
+        // Add X + (-X) to get 0
+        Add16(a=x, b=x2Comp, out=xZero); 
+
+        Mux16(a=x, b=xZero, sel=zx, out=ZXout);  
+
+    // NX Selection Pin 
+        Not16(in=ZXout, out=NXNot);
+        Mux16(a=ZXout, b=NXNot, sel=nx, out=NXout); 
+
+    // ZY Selection Pin 
+        // 2's Complement Y 
+        Not16(in=y, out=ZYNot);
+        Inc16(in=ZYNot, out=y2Comp); 
+
+        // Add Y + (-Y) to get 0
+        Add16(a=y, b=y2Comp, out=yZero); 
+
+        //ZYout pin
+        Mux16(a=y, b=yZero, sel=zy, out=ZYout); 
+    
+    // NY Selection Pin
+        Not16(in=ZYout, out=NYNot);
+        Mux16(a=ZYout, b=NYNot, sel=ny, out=NYout);
+
+    // F Selection Pin 
+        // X AND Y 
+        And16(a=NXout, b=NYout, out=XYAnd);
+
+        // X + Y (Full adder  or half?)
+        Add16(a=NXout, b=NYout, out=XYAdd);
+
+        Mux16(a=XYAnd, b=XYAdd, sel=f, out=Fout);  
+    
+    // NO Selection Pin
+        Not16(in=Fout, out=NONot);
+        Mux16(a=Fout, b=NONot, sel=no, out=NOout); 
+
+    // ZR Output Pin - Note: xZero is simply a 16 bit digit = 0
+        Or16(a=NOout, b=xZero, out=ZROr);
+        Not16(in=ZROr, out=ZRNot); 
+        And(a=ZRNot[15], b=ZRNot[15], out=zr)
+
+    // NG Selection Pin 
+        And(a=NOout[15], b=NOout[15], out=ng);
+
+        
+
 }
