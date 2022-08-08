@@ -1,9 +1,9 @@
 # Nand2Tetris-Hardware 
 
 Project Solutions to the Nand2Tetris Exercises
-- [x] Project #1
-- [ ] Project #2
-- [ ] Project #3
-- [ ] Project #4
-- [ ] Project #5
-- [ ] Project #6
+- [x] Project 01 - Using NAND to implement all gates
+- [x] Project 02- ALU
+- [ ] Project 03
+- [ ] Project 04
+- [ ] Project 05
+- [ ] Project 06
