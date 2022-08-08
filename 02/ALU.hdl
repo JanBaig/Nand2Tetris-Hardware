@@ -84,16 +84,17 @@ CHIP ALU {
     
     // NO Selection Pin
         Not16(in=Fout, out=NONot);
-        Mux16(a=Fout, b=NONot, sel=no, out=NOout); 
+        Mux16(a=Fout, b=NONot, sel=no, out=out); 
+
+        Mux16(a=Fout, b=NONot, sel=no, out[0..7]=NOout1, out[8..15]=NOout2, out=NOout);
 
     // ZR Output Pin - Note: xZero is simply a 16 bit digit = 0
-        Or16(a=NOout, b=xZero, out=ZROr);
-        Not16(in=ZROr, out=ZRNot); 
-        And(a=ZRNot[15], b=ZRNot[15], out=zr)
+        Or8Way(in=NOout1, out=ZROr1);
+        Or8Way(in=NOout2, out=ZROr2);
+        Or(a=ZROr1, b=ZROr2, out=ZROr);
+        Not(in=ZROr, out=zr); 
 
     // NG Selection Pin 
-        And(a=NOout[15], b=NOout[15], out=ng);
-
-        
+        And16(a=NOout, b=NOout, out[15]=ng);
 
 }
